@@ -1,5 +1,7 @@
 package com.sv.catchup.ui.login_signup.screens
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -25,13 +27,23 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.sv.catchup.R
 import com.sv.catchup.ui.components.LoginButton
+import com.sv.catchup.ui.home.HomeActivity
+import com.sv.catchup.ui.login_signup.navigation.LoginAndSignupScreens
+import com.sv.catchup.ui.theme.ThemeRed
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun LoginScreen(vm: loginViewModel) {
-    val s: String = ""
+fun LoginScreen(
+    vm: loginViewModel,
+    navController: NavController,
+    context: Context
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -90,7 +102,10 @@ fun LoginScreen(vm: loginViewModel) {
                 value = username,
                 onValueChange = { username = it },
                 placeholder = { Text(text = "Username") },
-                textStyle = TextStyle(fontSize = 16.sp)
+                textStyle = TextStyle(fontSize = 16.sp),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = ThemeRed
+                )
             )
         }
         Spacer(modifier = Modifier.height(20.dp))
@@ -112,7 +127,11 @@ fun LoginScreen(vm: loginViewModel) {
             TextField(value = password,
                 onValueChange = { password = it },
                 placeholder = { Text(text = "Password") },
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 textStyle = TextStyle(fontSize = 16.sp),
+                colors = TextFieldDefaults.textFieldColors(
+                    focusedIndicatorColor = ThemeRed
+                ),
                 trailingIcon = {
                     val image = if (passwordVisible)
                         Icons.Filled.Visibility
@@ -125,10 +144,11 @@ fun LoginScreen(vm: loginViewModel) {
         }
         //LOGIN BUTTON
         Spacer(modifier = Modifier.height(30.dp))
-        LoginButton(text = "LogIn")
+        LoginButton(text = "LogIn",
+            onClick = { context.startActivity(Intent(context, HomeActivity::class.java)) })
         Spacer(modifier = Modifier.height(20.dp))
         Card(
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate(LoginAndSignupScreens.SignupScreen.route) },
             modifier = Modifier
                 .size(height = 50.dp, width = 180.dp)
                 .background(
@@ -147,5 +167,7 @@ fun LoginScreen(vm: loginViewModel) {
 @Composable
 @Preview(showBackground = true)
 fun PreviewLogin() {
-    LoginScreen(loginViewModel())
+    var navController: NavHostController? = null
+    var context: Context? = null
+    LoginScreen(loginViewModel(), navController!!, context!!)
 }

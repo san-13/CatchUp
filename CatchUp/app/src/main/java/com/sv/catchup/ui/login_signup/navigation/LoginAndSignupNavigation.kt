@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.sv.catchup.ui.login_signup.screens.LoginScreen
+import com.sv.catchup.ui.login_signup.screens.SignupScreen
 import com.sv.catchup.ui.login_signup.viewmodel.loginViewModel
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -18,8 +19,8 @@ fun LoginAndSignupNavigation(
     startDestination: String = LoginAndSignupScreens.LoginScreen.route,
     context: Context,
     loginVm: loginViewModel
-){
-    AnimatedNavHost(navController = navController, startDestination = startDestination){
+) {
+    AnimatedNavHost(navController = navController, startDestination = startDestination) {
         composable(
             route = LoginAndSignupScreens.LoginScreen.route,
             exitTransition = {
@@ -35,7 +36,24 @@ fun LoginAndSignupNavigation(
                 ) + fadeIn(animationSpec = tween(durationMillis = 300))
             }
         ) {
-            LoginScreen(loginVm)
+            LoginScreen(loginVm, navController, context)
+        }
+        composable(
+            route = LoginAndSignupScreens.SignupScreen.route,
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -300 },
+                    animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+                ) + fadeOut(animationSpec = tween(durationMillis = 300))
+            },
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -300 },
+                    animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing)
+                ) + fadeIn(animationSpec = tween(durationMillis = 300))
+            }
+        ) {
+            SignupScreen(navController, context)
         }
     }
 
