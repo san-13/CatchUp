@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1013452151517",
+    "project_id": "catchup-b048a",
+    "storage_bucket": "catchup-b048a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013452151517:android:be131a0ba7f19ee861d934",
+        "android_client_info": {
+          "package_name": "com.sv.catchup"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013452151517-9g6gmkd9q45dfisgipk5ga9bverfoido.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sv.catchup",
+            "certificate_hash": "cfc39de194c7192b52e39ad9471647047c2080e5"
+          }
+        },
+        {
+          "client_id": "1013452151517-vd7dq02hljv7bs7ltvtr91bttp78g5gc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdsAltbstqN2xsgz2l9iAC3ILGKlrUwHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1013452151517-vd7dq02hljv7bs7ltvtr91bttp78g5gc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
