@@ -31,11 +31,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.sv.catchup.MainActivity
 import com.sv.catchup.R
 import com.sv.catchup.ui.components.LoginButton
 import com.sv.catchup.ui.home.HomeActivity
 import com.sv.catchup.ui.login_signup.navigation.LoginAndSignupScreens
 import com.sv.catchup.ui.theme.ThemeRed
+import com.sv.catchup.ui.videoCall.VideoCall
+import com.sv.catchup.ui.videoCall.VideoConf
+import com.sv.catchup.ui.videoCall.VideoGroup
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -100,6 +104,7 @@ fun LoginScreen(
         ) {
             TextField(
                 value = username,
+                singleLine = true,
                 onValueChange = { username = it },
                 placeholder = { Text(text = "Username") },
                 textStyle = TextStyle(fontSize = 16.sp),
@@ -126,6 +131,7 @@ fun LoginScreen(
         ) {
             TextField(value = password,
                 onValueChange = { password = it },
+                singleLine = true,
                 placeholder = { Text(text = "Password") },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 textStyle = TextStyle(fontSize = 16.sp),

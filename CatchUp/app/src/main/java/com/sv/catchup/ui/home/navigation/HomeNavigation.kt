@@ -6,16 +6,24 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.sv.catchup.ui.home.homeViewModel
+import com.sv.catchup.ui.home.screens.EnterMeetCodeScreen
 import com.sv.catchup.ui.home.screens.HomeScreen
+import com.sv.catchup.ui.videoCall.screens.VideoScreen
+import com.sv.catchup.ui.videoCall.viewModel.videoViewModel
 
-@OptIn(ExperimentalAnimationApi::class)
+@OptIn(ExperimentalAnimationApi::class, ExperimentalUnsignedTypes::class)
 @Composable
 fun HomeNavigation(
     navController: NavHostController,
     startDestination: String = HomeScreens.HomeScreen.route,
     context: Context,
+    homeViewModel: homeViewModel,
+    videoViewModel: videoViewModel
 ){
     AnimatedNavHost(navController = navController, startDestination = startDestination){
         composable(
@@ -33,7 +41,12 @@ fun HomeNavigation(
                 ) + fadeIn(animationSpec = tween(durationMillis = 300))
             }
         ) {
-            HomeScreen()
+            HomeScreen(navController,homeViewModel, onNavigate = navController::navigate, context = context)
+        }
+        composable(
+            route = HomeScreens.EnterMeetingCodeScreen.route
+        ) {
+            EnterMeetCodeScreen(navController=navController)
         }
     }
 }
