@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.sv.catchup">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,12 +18,8 @@
         android:theme="@style/Theme.CatchUp"
         tools:targetApi="31">
         <activity
-            android:name=".ui.home.HomeActivity"
+            android:name=".ui.videoCall.VideoGroup"
             android:exported="false" />
-        <activity
-            android:name=".ui.login_signup.loginandsignup"
-            android:exported="false"
-            android:theme="@style/Theme.CatchUp" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -31,6 +31,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.videoCall.VideoConf"
+            android:exported="false" />
+        <activity
+            android:name=".ui.videoCall.VideoCall"
+            android:exported="false" />
+        <activity
+            android:name=".ui.home.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.login_signup.loginandsignup"
+            android:exported="false"
+            android:theme="@style/Theme.CatchUp" />
     </application>
 
 </manifest>
