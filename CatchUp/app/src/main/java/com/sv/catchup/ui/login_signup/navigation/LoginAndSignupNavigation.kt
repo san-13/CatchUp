@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.sv.catchup.ui.home.navigation.HomeScreens
+import com.sv.catchup.ui.login_signup.screens.GetStartedScreen
 import com.sv.catchup.ui.login_signup.screens.LoginScreen
 import com.sv.catchup.ui.login_signup.screens.SignupScreen
 import com.sv.catchup.ui.login_signup.viewmodel.loginViewModel
@@ -54,6 +56,12 @@ fun LoginAndSignupNavigation(
             }
         ) {
             SignupScreen(navController, context)
+        }
+        composable(
+            route = LoginAndSignupScreens.GetStartedScreen.route,
+
+            ) {
+            GetStartedScreen(navController)
         }
     }
 

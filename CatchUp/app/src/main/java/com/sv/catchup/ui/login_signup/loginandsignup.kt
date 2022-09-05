@@ -28,7 +28,7 @@ class loginandsignup : ComponentActivity() {
                         navController = navController,
                         context = this,
                         loginVm = loginViewModel,
-                        startDestination = LoginAndSignupScreens.LoginScreen.route
+                        startDestination = LoginAndSignupScreens.GetStartedScreen.route
                     )
                 }
             }

@@ -46,8 +46,8 @@ class VideoGroup : ComponentActivity() {
         private val LOG_TAG = VideoGroup::class.java.simpleName
 
         private const val APP_ID = "3f7864367b3e439bb99a4cd31252c1de"
-        private const val CHANNEL = "qatwo"
-        private const val TOKEN = "007eJxTYJjOYbpeIiz4mlqg6MGl578tC1zW/VYua9XibWw2EySlvKYqMBinmVuYmRibmScZp5oYWyYlWVommiSnGBsamRolG6ak6n4VSV7rJpZsqjGNhZEBAkF8VobCxJLyfAYGAPPWHss="
+        private var CHANNEL = "qatwo"
+        private var TOKEN = "007eJxTYJjOYbpeIiz4mlqg6MGl578tC1zW/VYua9XibWw2EySlvKYqMBinmVuYmRibmScZp5oYWyYlWVommiSnGBsamRolG6ak6n4VSV7rJpZsqjGNhZEBAkF8VobCxJLyfAYGAPPWHss="
 
         private const val PERMISSION_CODE = 22
     }
@@ -56,12 +56,25 @@ class VideoGroup : ComponentActivity() {
         binding= ActivityVideoGroupBinding.inflate(layoutInflater)
             this.getSystemService(Activity.LAYOUT_INFLATER_SERVICE)
         setContentView(binding.root)
+        CHANNEL=intent?.extras?.getString("channelName").toString()
+        TOKEN=intent?.extras?.getString("token").toString()
         if (permissionsGranted()) {
             initializeApplication()
         } else {
             requestPermissions()
         }
         binding.apply {
+            tvChannelName.text= CHANNEL
+            tvChannelName.setOnClickListener {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, CHANNEL)
+                    type = "text/plain"
+                }
+                val shareIntent = Intent.createChooser(sendIntent, null)
+                startActivity(shareIntent)
+
+            }
             endCallBtn.setOnClickListener { onDestroy() }
             switchCamera.setOnClickListener { onSwitchCameraClicked() }
             offVideo.setOnClickListener { onLocalVideoMuteClicked() }
