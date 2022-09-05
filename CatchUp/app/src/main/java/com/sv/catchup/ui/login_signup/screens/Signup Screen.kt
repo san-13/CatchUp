@@ -2,6 +2,8 @@ package com.sv.catchup.ui.login_signup.screens
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,12 +29,22 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.sv.catchup.R
+import com.sv.catchup.data.loginReqBody
+import com.sv.catchup.data.signupReqBody
+import com.sv.catchup.data.token
+import com.sv.catchup.remote.CatchUpApi
+import com.sv.catchup.remote.RetrofitInstance
+import com.sv.catchup.ui.components.GoogleSignInButton
 import com.sv.catchup.ui.components.LoginButton
 import com.sv.catchup.ui.home.HomeActivity
 import com.sv.catchup.ui.login_signup.navigation.LoginAndSignupScreens
 import com.sv.catchup.ui.theme.BgWhite
 import com.sv.catchup.ui.theme.TextFieldGrey
 import com.sv.catchup.ui.theme.ThemeRed
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.jar.Attributes
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -68,7 +80,7 @@ fun SignupScreen(
             singleLine = true,
             value = name,
             onValueChange = { name = it },
-            label = { Text(text = "Name") },
+            label = { Text(text = "Username") },
             textStyle = TextStyle(fontSize = 16.sp),
 
             )
@@ -87,7 +99,7 @@ fun SignupScreen(
             singleLine = true,
             value = phone,
             onValueChange = { phone = it },
-            label = { Text(text = "Phone") },
+            label = { Text(text = "Name") },
             textStyle = TextStyle(fontSize = 16.sp)
         )
 
@@ -144,23 +156,10 @@ fun SignupScreen(
         Spacer(modifier = Modifier.height(50.dp))
         //Signup Button
         LoginButton(text = "Sign Up",
-            onClick = { context.startActivity(Intent(context, HomeActivity::class.java)) })
+            onClick = { signup(context = context, name = name, email = email, password = password, phoneNumber = phone) })
         Spacer(modifier = Modifier.height(20.dp))
         //SignUpWithGoogle
-        Card(
-            onClick = { },
-            modifier = Modifier
-                .size(height = 50.dp, width = 180.dp)
-                .background(
-                    Color.Transparent
-                )
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.btn_google_signin_light_normal_web),
-                contentDescription = "login via google button",
-                contentScale = ContentScale.FillBounds
-            )
-        }
+        GoogleSignInButton {}
         Spacer(modifier = Modifier.height(30.dp))
         TextButton(onClick = { navController.navigate(LoginAndSignupScreens.LoginScreen.route) }) {
             Text(
@@ -170,4 +169,35 @@ fun SignupScreen(
             )
         }
     }
+}
+
+fun signup(
+    context: Context,
+    name:String,
+    email:String,
+    password:String,
+    phoneNumber:String
+){
+    val newSignup = signupReqBody()
+    newSignup.username=name
+    newSignup.email=email
+    newSignup.phoneNumber=phoneNumber
+    newSignup.password=password
+    val catchUpApi = RetrofitInstance.buildService(CatchUpApi::class.java)
+    val requestCall = catchUpApi.signup(newSignup)
+    requestCall.enqueue(object : Callback<token> {
+        override fun onResponse(call: Call<token>, response: Response<token>) {
+            if(response.isSuccessful) {
+                val tokenFile: SharedPreferences =
+                    context.getSharedPreferences("tokenfile", Context.MODE_PRIVATE)
+                val login: token? = response.body()
+                tokenFile.edit().putString("token", login!!.token).apply()
+                context.startActivity(Intent(context,HomeActivity::class.java))
+            }
+            else Toast.makeText(context,"Sign in Failed", Toast.LENGTH_LONG).show()
+        }
+        override fun onFailure(call: Call<token>, t: Throwable) {
+            Toast.makeText(context,"No response from server", Toast.LENGTH_LONG).show()
+        }
+    })
 }
