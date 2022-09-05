@@ -18,6 +18,9 @@
         android:theme="@style/Theme.CatchUp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.OAuthActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.videoCall.VideoGroup"
             android:exported="false" />
         <activity

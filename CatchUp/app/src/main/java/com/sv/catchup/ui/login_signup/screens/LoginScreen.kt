@@ -43,6 +43,7 @@ import com.sv.catchup.data.loginReqBody
 import com.sv.catchup.data.token
 import com.sv.catchup.remote.CatchUpApi
 import com.sv.catchup.remote.RetrofitInstance
+import com.sv.catchup.ui.OAuthActivity
 import com.sv.catchup.ui.components.GoogleSignInButton
 import com.sv.catchup.ui.components.LoginButton
 import com.sv.catchup.ui.home.HomeActivity
@@ -74,8 +75,8 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
         ) {
-            Image(painter = painterResource(id = R.drawable.catch_up), contentDescription ="logo",
-            modifier = Modifier.height(150.dp),
+            Image(painter = painterResource(id = R.drawable.group_40), contentDescription ="logo",
+            modifier = Modifier.height(25.dp),
             contentScale = ContentScale.FillHeight)
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -154,7 +155,7 @@ fun LoginScreen(
         LoginButton(text = "LogIn",
             onClick = { login(context = context, username = username, password = password) })
         Spacer(modifier = Modifier.height(20.dp))
-            GoogleSignInButton {}
+            GoogleSignInButton {context.startActivity(Intent(context,OAuthActivity::class.java))}
 
     }
         TextButton(onClick = {navController.navigate(LoginAndSignupScreens.SignupScreen.route)}){

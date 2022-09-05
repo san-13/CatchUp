@@ -60,7 +60,7 @@ fun SplashScreen() {
         verticalArrangement = Arrangement.Center,
     ) {
         Image(painter = painterResource(id = R.drawable.catch_up), contentDescription ="logo",
-            modifier = Modifier.height(150.dp),
+            modifier = Modifier.height(25.dp),
         contentScale = ContentScale.FillHeight)}
 }
 
