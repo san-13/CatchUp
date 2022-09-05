@@ -63,7 +63,7 @@ link
 
 ## Future Plans
 
-- Profile Picture Update (Auto Fetch Profile Picture from Google Account after Google Oauth)
+- Update Profile Picture 
 - Screen Sharing
 - Live Chatting while video conferencing
 - Full Screen Mode (clicking on an indivisual video will maximize it)
