@@ -23,7 +23,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.isPopupLayout
 import androidx.navigation.NavController
+import coil.compose.rememberAsyncImagePainter
+import com.google.firebase.auth.FirebaseAuth
 import com.sv.catchup.MainActivity
 import com.sv.catchup.R
 import com.sv.catchup.data.channelCredential
@@ -45,6 +48,7 @@ import com.sv.catchup.ui.videoCall.VideoGroup
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.nio.file.WatchEvent
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -54,13 +58,17 @@ fun HomeScreen(
     onNavigate: (String) -> Unit,
     context: Context
 ) {
-    var tokenFile=context.getSharedPreferences("tokenfile", Context.MODE_PRIVATE)
+    var tokenFile = context.getSharedPreferences("tokenfile", Context.MODE_PRIVATE)
     val default = context.resources.getString(R.string.app_name)
-    val text = tokenFile?.getString("name",default).toString()
+    val text = tokenFile?.getString("name", default).toString()
+    val photoUrl = tokenFile?.getString("image", default).toString()
     val openDialog = remember {
         mutableStateOf(false)
     }
     val logoutPressed = remember {
+        mutableStateOf(false)
+    }
+    val circularPgBar = remember {
         mutableStateOf(false)
     }
     Column(
@@ -94,13 +102,23 @@ fun HomeScreen(
                 }
                 Column {
                     IconButton(onClick = { logoutPressed.value = true }) {
-                        Image(
-                            painter = painterResource(id = R.drawable.abstract_user_flat_4),
-                            contentDescription = "profile image",
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(10.dp))
-                                .size(70.dp)
-                        )
+                        if (photoUrl == default) {
+                            Image(
+                                painter = painterResource(id = R.drawable.abstract_user_flat_4),
+                                contentDescription = "profile image",
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .size(70.dp)
+                            )
+                        } else {
+                            Image(
+                                painter = rememberAsyncImagePainter(model = photoUrl),
+                                contentDescription = "profile image",
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(35.dp))
+                                    .size(70.dp)
+                            )
+                        }
                     }
                     DropdownMenu(
                         expanded = logoutPressed.value,
@@ -154,10 +172,16 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp),
-                onClick = { CreateChannel(context) },
+                onClick = {
+                    CreateChannel(context)
+                    circularPgBar.value = true
+                },
                 shape = RoundedCornerShape(16.dp),
                 backgroundColor = ThemeRed
             ) {
+                if (circularPgBar.value) {
+                    LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
+                }
                 Row(
                     modifier = Modifier.padding(16.dp),
                     horizontalArrangement = Arrangement.End,
@@ -256,6 +280,7 @@ fun CreateChannel(context: Context) {
                 Toast.makeText(context, "Response Failure", Toast.LENGTH_LONG).show()
             }
         }
+
         override fun onFailure(call: Call<channelCredential>, t: Throwable) {
             Toast.makeText(context, "Call Failure", Toast.LENGTH_LONG).show()
         }
@@ -278,31 +303,36 @@ fun JoinChannel(context: Context, channelName: String) {
                 Toast.makeText(context, "Response Failure", Toast.LENGTH_LONG).show()
             }
         }
+
         override fun onFailure(call: Call<channelToken>, t: Throwable) {
             Toast.makeText(context, "Call Failure", Toast.LENGTH_LONG).show()
         }
     })
 }
 
-fun Logout(context: Context){
-    var tokenFile=context.getSharedPreferences("tokenfile", Context.MODE_PRIVATE)
+fun Logout(context: Context) {
+    var auth: FirebaseAuth = FirebaseAuth.getInstance()
+    FirebaseAuth.getInstance().signOut()
+    var tokenFile = context.getSharedPreferences("tokenfile", Context.MODE_PRIVATE)
     val default = context.resources.getString(R.string.app_name)
-    val text = tokenFile?.getString("token",default).toString()
+    val text = tokenFile?.getString("token", default).toString()
     var token = "Bearer_$text"
     val catchUpApi = RetrofitInstance.buildService(CatchUpApi::class.java)
     val requestCall = catchUpApi.logout(token)
-    requestCall.enqueue(object :Callback<logout>{
+    requestCall.enqueue(object : Callback<logout> {
         override fun onResponse(call: Call<logout>, response: Response<logout>) {
-            tokenFile!!.edit().putString("token",default).apply()
+            tokenFile!!.edit().putString("token", default).apply()
+            tokenFile!!.edit().putString("name", default).apply()
+            tokenFile!!.edit().putString("image", default).apply()
             context.startActivity(Intent(context, loginandsignup::class.java))
-         /*   if(response.isSuccessful) {
-                context.startActivity(Intent(context, loginandsignup::class.java))
-            }
-            else Toast.makeText(context,"Logout Failed", Toast.LENGTH_LONG).show()*/
+            /*   if(response.isSuccessful) {
+                   context.startActivity(Intent(context, loginandsignup::class.java))
+               }
+               else Toast.makeText(context,"Logout Failed", Toast.LENGTH_LONG).show()*/
         }
 
         override fun onFailure(call: Call<logout>, t: Throwable) {
-           // Toast.makeText(context,"No response from server", Toast.LENGTH_LONG).show()
+            // Toast.makeText(context,"No response from server", Toast.LENGTH_LONG).show()
         }
     })
 }
