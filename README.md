@@ -65,7 +65,7 @@ Google-Drive link of the apk file of the Application Catch Up - https://drive.go
 
 - Update Profile Picture 
 - Screen Sharing
-- Live chatting while video conferencing
+- Live Chatting while video conferencing
 - Full Screen Mode (clicking on an indivisual video will maximize it)
 
 ## References
